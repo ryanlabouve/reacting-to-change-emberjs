@@ -92,7 +92,7 @@
 				<section>
           <small>—Techniques—</small>
           <section>
-            <h2>Techniques</h2>
+            <h3>Techniques</h3>
             <ul>
               <li>Reactive Primitives</li>
               <li>Reactive Primitives in Ember</li>
@@ -158,7 +158,7 @@ export default Ember.Route.extend({
             </code></pre>
             <pre><code class="hljs" data-trim contenteditable>
 {{! app/templates/application.hbs }}
-Why, hello there {{model.fullName}}!<br>
+Why, hello there {{model.firstName}}!<br>
 
 <p>
   First Name:
@@ -173,7 +173,7 @@ Why, hello there {{model.fullName}}!<br>
 
           <section>
             <p>Primitive #2</p>
-            <h2>Reactive: Ember.computed</h2>
+            <h3>Reactive: Ember.computed</h3>
             <ul>
               <li>Treat a function like a property</li>
               <li>Define dependent keys</li>
@@ -221,27 +221,31 @@ Why, hello there {{model.fullName}}!<br>
           <section>
              <h3>computed properties</h3>
              <img src="images/computed-properties-diagram.jpg" />
-             <p><small><a href="https://www.youtube.com/watch?v=IaFjXFuG7OY">Mike North, Compose All the Things</a></small></p>
+
+             <p>Yey lazy evaluation! <small><a href="https://www.youtube.com/watch?v=IaFjXFuG7OY">Mike North, Compose All the Things</a></small></p>
           </section>
           <section>
-            <h2>What about our, reach goals?</h2>
-            <p><small>For the reactive part</small></p>
-            <ol>
-              <li>Lazy Evaluation <br><small>( So we are not crunching data before we need it )</small></li>
-              <li>Comopseable <br><small>( Keep relationships can reusable and lego-ish )</small></li>
-              <li>Testable <br><small>( Clean encapsulated peices we can test)</small></li>
-              <li>Easy to Reason About</li>
-            </ol>
-          </section>
-          <section>
-            <h3>Computed Properties: Lazy Evaluation</h3>
-            <p>Yey caching. Nothing computed until it's fetched</p>
-            <img src="images/computed-properties-diagram.jpg" />
-          </section>
-          <section>
-            <h3>Computed Properties: Composeable</h3>
-            <img src="images/composeable-cps.jpg">
-             <p><small><a href="https://www.youtube.com/watch?v=IaFjXFuG7OY">Mike North, Compose All the Things</a></small></p>
+            <h3>Computed Properties: Marcos</h3>
+            <p>Forming more complex reactive relationships</p>
+            <pre><code class="hljs" data-trim contenteditable>
+import Ember from 'ember';
+import EmberCPM from 'ember-cpm';
+
+const { Macros: { sum, difference, product }} = EmberCPM;
+
+export default Ember.Component.extend({
+  num1: 45,
+  num2: 3.5,
+  num3: 13.4,
+  num4: -2,
+
+  total: sum(
+    sum('num1', 'num2', 'num3'),
+    difference('num3', 'num2'),
+    product(difference('num2', 'num1'), 'num4')
+  )
+});
+						</code></pre>
           </section>
           <section>
             <h3>Computed Properties: Testable</h3>
@@ -266,6 +270,122 @@ Why, hello there {{model.fullName}}!<br>
           </section>
 				</section>
 
+        <section>
+          <section>
+            <h2>Practical</h2>
+          </section>
+          <section>
+            <h3>We'll start with a human problem</h3>
+            <p>I'm tired of figuring out how much to eat.</p>
+          </section>
+          <section>
+            <blockquote>
+              Harris Benedict Equation is a formula that uses your BMR and then applies an activity factor to determine your total daily energy expenditure (calories)
+            </blockquote>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Activivty Level
+                  </th>
+                  <th>
+                    Formula
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>none</td>
+                  <td>= BMR x 1.2</td>
+                </tr>
+                <tr>
+                  <td>light</td>
+                  <td>= BMR x 1.375</td>
+                </tr>
+                <tr>
+                  <td>moderate</td>
+                  <td>= BMR x 1.55</td>
+                </tr>
+                <tr>
+                  <td>intense</td>
+                  <td>= BMR x 1.725</td>
+                </tr>
+                <tr>
+                  <td>ultra brutal</td>
+                  <td>= BMR x 1.9</td>
+                </tr>
+              </tbody>
+            </table>
+            <a href="http://www.bmi-calculator.net/bmr-calculator/harris-benedict-equation/">http://www.bmi-calculator.net/bmr-calculator/harris-benedict-equation/</a>
+          </section>
+          <section>
+            <blockquote>
+              The BMR formula uses the variables of height, weight, age and gender to calculate the Basal Metabolic Rate (BMR)
+            </blockquote>
+            <blockquote>
+              Women: <br>
+              BMR = 655 + ( 4.35 x weight lbs ) + ( 4.7 x height, inches ) - ( 4.7 x age, years )
+              <br><br>
+              Men: <br>
+              BMR = 66 + ( 6.23 x weight lbs) + ( 12.7 x height, inches ) - ( 6.8 x age, year )
+            </blockquote>
+            <a href="http://www.bmi-calculator.net/bmr-calculator/bmr-formula.php">http://www.bmi-calculator.net/bmr-calculator/bmr-formula.php</a>
+          </section>
+          <section>
+            <h3>Human Inputs</h3>
+            <ul>
+              <li>Weight</li>
+              <li>Height</li>
+              <li>Age</li>
+              <li>Sex</li>
+            </ul>
+            <h3>Need to Determine</h3>
+            <p>How much to eat based on amout of activity</p>
+          </section>
+
+          <section>
+            <h3>Setup our project</h3>
+            <p><a href="https://github.com/ryanlabouve/how-much-to-eat-example">https://github.com/ryanlabouve/how-much-to-eat-example</a></p>
+            <pre><code class="hljs" data-trim contenteditable>
+ember new how-much-to-eat
+ember install ember-cli-sass
+ember install ember-paper
+npm install ember-cpm --save-dev
+
+ember generate route application
+ember generate controller application
+ember serve
+            </code></pre>
+          </section>
+          <section>
+            <h3>Create our Human, and Load as Model</h3>
+            <img src="images/s1.jpg">
+          </section>
+
+          <section>
+            <h3>Build _VERY_ basic interface</h3>
+            <img src="images/s2.jpg">
+          </section>
+          <section>
+            <h3>I mean very basic...</h3>
+            <img src="images/s3.jpg">
+          </section>
+          <section>
+            <h3>Compose all the things to setup BMR</h3>
+            <img src="images/s4.jpg">
+          </section>
+          <section>
+            <h3>Yey browser REPL</h3>
+            <img src="images/s5.jpg">
+          </section>
+          <section>
+            <h3>Setup rest of properties</h3>
+            <img src="images/s6.jpg">
+          </section>
+          <section>
+            <img src="images/practical.gif">
+          </section>
+        </section>
 				<section>
           <h2>Demo</h2>
         </section>
