@@ -1,6 +1,7 @@
 # RyanLaBouve/reacting-to-change-emberjs
 
 _Checkout the slides!_
+
 http://ryanlabouve.github.io/reacting-to-change-emberjs/#/
 
 This talk is about adding reactivity to UI using #emberjs via Ember.Object and
