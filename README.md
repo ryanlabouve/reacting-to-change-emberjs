@@ -1,8 +1,14 @@
 # RyanLaBouve/reacting-to-change-emberjs
 
-// TODO: add link to talk here
+_Checkout the slides!_
+http://ryanlabouve.github.io/reacting-to-change-emberjs/#/
 
-// TODO: add description to talk here
+This talk is about adding reactivity to UI using #emberjs via Ember.Object and
+computed properties. I include some context, some techniques, and some best
+practices.
+
+Enjoy! And feel free to PR if you find any mistakes... especially spelling
+mistakes (:
 
 ## Helpful References
 
