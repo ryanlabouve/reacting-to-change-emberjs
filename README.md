@@ -11,6 +11,8 @@ practices.
 Enjoy! And feel free to PR if you find any mistakes... especially spelling
 mistakes (:
 
+Here's the sample app: https://github.com/ryanlabouve/how-much-to-eat-example
+
 ## Helpful References
 
 https://github.com/emberjs/ember.js/blob/master/packages/ember-metal/lib/computed.js
