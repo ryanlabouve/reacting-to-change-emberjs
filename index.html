@@ -55,7 +55,7 @@
 						<h2>Reactivity in User Interfaces</h2>
             <blockquote>
 "the principle that any changes to application state are reflected immediately to the user, visually or otherwise."
-"Reactive Modeling with Ember"</blockquote>
+</blockquote>
 						<p>Charles Lowell, <a href="http://frontside.io/blog/2014/09/21/reactive-modeling-with-ember.html
 ">Reactive Modeling with Ember</a></p>
 					</section>
@@ -105,111 +105,163 @@
             <h2>Reactive Primitives</h2>
             <p>What we're looking for</p>
             <ul class="fragment">
-              <li>Stateful</li>
-              <li>Observable</li>
-              <li>- Reactive / Support Dynamic Relationships</li>
-              <li>Run Loop</li>
+              <li>Observable<br><small>(so we can react to changes)</small></li>
+              <li>Support Dynamic Relationships<br><small>(between static inputs)</small></li>
+              <li>Run Loop<br><small>(to set everything in motion)</small></li>
             </ul>
           </section>
           <section>
             <h2>Reactive Primitives In Ember</h2>
             <ul>
-              <li class="fragment">Stateful -&gt; <code>Ember.Object</code></li>
-              <li class="fragment">Observable -&gt; <code>Ember.Object</code> via get and set</li>
+              <li class="fragment">Observable -&gt; <code>Ember.Object</code></li>
               <li class="fragment">Reactive -&gt; <code>Ember.computed</code></li>
               <li class="fragment">Run Loop -&gt; Ember's Runloop (via Backburner.js)</li>
             </ul>
           </section>
-				</section>
+          <section>
+            <h2>Reach Goals</h2>
+            <p><small>For the reactive part</small></p>
+            <ol>
+              <li>Lazy Evaluation <br><small>( So we are not crunching data before we need it )</small></li>
+              <li>Comopseable <br><small>( Keep relationships can reusable and lego-ish )</small></li>
+              <li>Testable <br><small>( Clean encapsulated peices we can test)</small></li>
+              <li>Easy to Reason About</li>
+            </ol>
+          </section>
+          <section>
+            <p>Primitive #1</p>
+            <h3>Observable: Ember.Object</h3>
+            <img src="images/ember-object-docs.jpg" />
+          </section>
+          <section>
+            <h3>Ember.Object, Setter/Getter</code></h3>
+            <pre><code class="hljs" data-trim contenteditable>
+// Setter and Getter Required for Observation
+const human = Ember.Object.create({});
+human.set('name', 'bob');
+human.get('name'); // => "name"
+            </pre></code>
+          </section>
+          <section>
+            <h3>Ember.Object, Observable Example</h3>
+            <pre><code class="hljs" data-trim contenteditable>
+// app/application/route
+import Ember from 'ember';
 
-				<section>
-					<h2>Point of View</h2>
-					<p>
-						Press <strong>ESC</strong> to enter the slide overview.
-					</p>
-					<p>
-						Hold down alt and click on any element to zoom in on it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Alt + click anywhere to zoom back out.
-					</p>
-				</section>
+const Human = Ember.Object.extend();
 
-				<section>
-					<h2>Touch Optimized</h2>
-					<p>
-						Presentations look great on touch devices, like mobile phones and tablets. Simply swipe through your slides.
-					</p>
-				</section>
+export default Ember.Route.extend({
+  model() {
+   return Human.create({ firstName: 'bob' });
+  }
+});
+            </code></pre>
+            <pre><code class="hljs" data-trim contenteditable>
+{{! app/templates/application.hbs }}
+Why, hello there {{model.fullName}}!<br>
 
-				<section data-markdown>
-					<script type="text/template">
-						## Markdown support
+<p>
+  First Name:
+  {{input value=model.firstName}}
+</p>
+</code></pre>
+          </section>
+          <section>
+            <h3>Ember.Object Running Example</h3>
+            <img src="images/ember-object.gif" />
+          </section>
 
-						Write content using inline or external Markdown.
-						Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
-
-						```
-						<section data-markdown>
-						  ## Markdown support
-
-						  Write content using inline or external Markdown.
-						  Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
-						</section>
-						```
-					</script>
-				</section>
-
-				<section>
-					<section id="fragments">
-						<h2>Fragments</h2>
-						<p>Hit the next arrow...</p>
-						<p class="fragment">... to step through ...</p>
-						<p><span class="fragment">... a</span> <span class="fragment">fragmented</span> <span class="fragment">slide.</span></p>
-
-						<aside class="notes">
-							This slide has fragments which are also stepped through in the notes window.
-						</aside>
-					</section>
+          <section>
+            <p>Primitive #2</p>
+            <h2>Reactive: Ember.computed</h2>
+            <ul>
+              <li>Treat a function like a property</li>
+              <li>Define dependent keys</li>
+              <li>Re-evaluate property if dependent key changes</li>
+            </ul>
+            <img src="images/easy-computed-prop.jpg">
+          </section>
 					<section>
-						<h2>Fragment Styles</h2>
-						<p>There's different types of fragments, like:</p>
-						<p class="fragment grow">grow</p>
-						<p class="fragment shrink">shrink</p>
-						<p class="fragment fade-out">fade-out</p>
-						<p class="fragment current-visible">current-visible</p>
-						<p class="fragment highlight-red">highlight-red</p>
-						<p class="fragment highlight-blue">highlight-blue</p>
-					</section>
-				</section>
+            <h3>Ember.Object, Computed Property Example</h3>
+            <pre><code class="hljs" data-trim contenteditable>
+import Ember from 'ember';
+const { computed } = Ember;
 
-				<section id="transitions">
-					<h2>Transition Styles</h2>
-					<p>
-						You can select from different transitions, like: <br>
-						<a href="?transition=none#/transitions">None</a> -
-						<a href="?transition=fade#/transitions">Fade</a> -
-						<a href="?transition=slide#/transitions">Slide</a> -
-						<a href="?transition=convex#/transitions">Convex</a> -
-						<a href="?transition=concave#/transitions">Concave</a> -
-						<a href="?transition=zoom#/transitions">Zoom</a>
-					</p>
-				</section>
+const Human = Ember.Object.extend({
+  fullName: computed( 'firstName',  'lastName', function() {
+      return `${this.get('firstName')} ${this.get('lastName')}`;
+   })
+});
 
-				<section id="themes">
-					<h2>Themes</h2>
-					<p>
-						reveal.js comes with a few themes built in: <br>
-						<!-- Hacks to swap themes after the page has loaded. Not flexible and only intended for the reveal.js demo deck. -->
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/black.css'); return false;">Black (default)</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/white.css'); return false;">White</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/league.css'); return false;">League</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/sky.css'); return false;">Sky</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/beige.css'); return false;">Beige</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/simple.css'); return false;">Simple</a> <br>
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/serif.css'); return false;">Serif</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/blood.css'); return false;">Blood</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/night.css'); return false;">Night</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/moon.css'); return false;">Moon</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/solarized.css'); return false;">Solarized</a>
-					</p>
+export default Ember.Route.extend({
+  model() {
+   return Human.create({ firstName: 'bob', lastName: 'smith' });
+  }
+});
+            </code></pre>
+            <pre><code class="hljs" data-trim contenteditable>
+Why, hello there {{model.fullName}}!<br>
+
+<p>
+  First Name:
+  {{input value=model.firstName}}
+</p>
+
+<p>
+  <label>Last Name:</label>
+  {{input value=model.lastName}}
+</p>
+						</code></pre>
+          </section>
+          <section>
+            <h3>Ember.computed Running Example</h3>
+            <img src="images/computed-property.gif" />
+          </section>
+
+          <section>
+             <h3>computed properties</h3>
+             <img src="images/computed-properties-diagram.jpg" />
+             <p><small><a href="https://www.youtube.com/watch?v=IaFjXFuG7OY">Mike North, Compose All the Things</a></small></p>
+          </section>
+          <section>
+            <h2>What about our, reach goals?</h2>
+            <p><small>For the reactive part</small></p>
+            <ol>
+              <li>Lazy Evaluation <br><small>( So we are not crunching data before we need it )</small></li>
+              <li>Comopseable <br><small>( Keep relationships can reusable and lego-ish )</small></li>
+              <li>Testable <br><small>( Clean encapsulated peices we can test)</small></li>
+              <li>Easy to Reason About</li>
+            </ol>
+          </section>
+          <section>
+            <h3>Computed Properties: Lazy Evaluation</h3>
+            <p>Yey caching. Nothing computed until it's fetched</p>
+            <img src="images/computed-properties-diagram.jpg" />
+          </section>
+          <section>
+            <h3>Computed Properties: Composeable</h3>
+            <img src="images/composeable-cps.jpg">
+             <p><small><a href="https://www.youtube.com/watch?v=IaFjXFuG7OY">Mike North, Compose All the Things</a></small></p>
+          </section>
+          <section>
+            <h3>Computed Properties: Testable</h3>
+            <p>
+              <a href="https://github.com/cibernox/ember-cpm/blob/master/tests/unit/macros/sum-test.js">
+                cibernox/ember-cpm, sum-test.js
+              </a>
+            </p>
+            <img src="images/cpm-test.jpg">
+          </section>
+          <section>
+            <h3>Computed Properties: Best Practices</h3>
+            <p>
+              With great power...
+            </p>
+            <ul>
+              <li>Keep your functions pure<br><small>(Avoid side effects at all costs)</small></li>
+              <li>Treat dependent keys like parameters<br><small>(If you use it, declare it)</small></li>
+            </ul>
+          </section>
 				</section>
 
 				<section>
