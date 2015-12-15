@@ -90,10 +90,36 @@
 				</section>
 
 				<section>
-					<h2>Slides</h2>
-					<p>
-						Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it out at <a href="http://slides.com" target="_blank">http://slides.com</a>.
-					</p>
+          <small>—Techniques—</small>
+          <section>
+            <h2>Techniques</h2>
+            <ul>
+              <li>Reactive Primitives</li>
+              <li>Reactive Primitives in Ember</li>
+              <li><code>Ember.Model</code></li>
+              <li><code>Ember.computed</code></li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Reactive Primitives</h2>
+            <p>What we're looking for</p>
+            <ul class="fragment">
+              <li>Stateful</li>
+              <li>Observable</li>
+              <li>- Reactive / Support Dynamic Relationships</li>
+              <li>Run Loop</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Reactive Primitives In Ember</h2>
+            <ul>
+              <li class="fragment">Stateful -&gt; <code>Ember.Object</code></li>
+              <li class="fragment">Observable -&gt; <code>Ember.Object</code> via get and set</li>
+              <li class="fragment">Reactive -&gt; <code>Ember.computed</code></li>
+              <li class="fragment">Run Loop -&gt; Ember's Runloop (via Backburner.js)</li>
+            </ul>
+          </section>
 				</section>
 
 				<section>
